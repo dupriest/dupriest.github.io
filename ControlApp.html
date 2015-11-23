@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<link rel="shortcut icon" href="Old_Well_BW.ico">
+	<title>EyeReader</title>
+</head>
+
+<body>
+	<div id="root">
+		<div id="Menu">
+			<div id="inner">
+				<div id="MPlink">
+					<a href="mainpage.html"><img src="Old_Well_BW.png" alt="Old Well" id="OldWellPic"></a>
+				</div>
+				<div id="OtherLinks">
+					<table style="width: 100%">
+						<tr>
+							<td><a href="About.html"><br><center>About</center></a></td>
+							<td><a href="DDRD.html"><br><center>Data Driven Research and Dropbox</center></a></td>
+							<td><a href="EyeReader.html"><br><center>EyeReader</center></a></td>
+							<td style="background: #bd86e7"><a href="ControlApp.html"><br><center>ControlApp</center></a></td>
+							<td><a href="GraphsDA.html"><br><center>Graphs and Data Analysis</center></a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="bodydiv">
+			<div id="textdiv">
+				<h2>ControlApp</h2>
+				<i>Check out the <a href= 'https://github.com/dupriest/ControlApp---EyeReader'>ControlApp Repository</a> on GitHub!</i><br><br>
+				<center><img src='CA_1.png' alt="ControlApp img1"></center>
+				<p>ControlApp is an application that begun with a very simple purpose.  My clients wanted a way to change which Tar Heel Reader 'Bookshelf' (a url to a specific THR favorite's page) the user was redirected to and in turn, limit their access to only a certain selection of books.  This originally was hard coded into the EyeReader code.  There were two options: the obvious solution was simply to make another version of the software that would be switched out when needed.  But, this in itself would basically require the user to 'redownload' the software and I didn't want to make the user go through a possibly arduous situation twice.  The program can take a decent amount of time to sync in dropbox when one has very slow internet speeds.</p>
+				<p>My other option was to get a bit creative.</p>
+				<center><img src='CA_4.png' alt="ControlApp img2"></center>
+				<p>I figured all I had to do was make a tiny little text file, called "Bookshelf.txt", whose sole purpose was just to either have 'A' or 'B' which told the program which of two bookshelves to redirect the user's browser to.  But this in itself caused a bit of an issue.  I didn't want them having to hunt through the program files to change this.  And what if this file read something other than A or B?  What then?</p>
+				<p>The ControlApp was a simple user interface designed to allow research administrators like my clients to alter the program to their needs.  And it didn't stop at being just a simple tool to change one text file.  It lead me to series of questions that I began to have about the future of their research... a future that I might not always be around (as a research assistant for a semester) to fix.  How could I plan for future troubleshooting?  How could I automate and improve upon this idea of data driven research through Dropbox?</p>
+				<center><img src='CA_3.png' alt="ControlApp img3"></center>
+				<p>The second thing I added was the user-bookshelf list.  Its simple enough, as all it really does it read the 'Bookshelf.txt' of each user to display which user corresponds to what bookshelf.  But then I also had a thought... my clients had mentioned before that they waited a specific period of time before they switched a user to the next bookshelf.  Would it not be useful then to know when the last time they had switched the user's bookshelf?  And thus, the extra text file 'Bookshelf_Date.txt' was born; updated every time the administrator changed which bookshelf the user was set to.</p>
+				<p>I soon became enamored with this idea of a interface to control all instances of the program in use.  Wasn't that part of the beauty of Dropbox?  Having access to all of your user's applications in order to gather data?  But it could be so much more than that.  This was the idea that was put into practice.</p>
+				<center><img src='CA_2.png' alt="ControlApp img4"></center>
+				<p>And thus, the third feature, the 'Create New User' was made.  Why go through the tedious process of copying another user's folder, removing their data files, and then renaming it?  Instead I chose to automate this process with a little help from <a href= "https://docs.python.org/2/library/shutil.html">shutil</a> a python module designed for high level file operations.  All we do is keep an internal copy of a 'blank' version of the program and then allow the administrator to set the user's name (folder name) and bookshelf upon creation.</p>
+				<center><img src='CA_5.png' alt="ControlApp img5"></center>
+				<p>The fourth feature also takes advantage of shutil to allow the administrator to update and or 'reinstall' a user's program.  I found this to be particularly necessary in time to come, because the fault of the Dropbox distribution design is that the program files aren't hidden away somewhere deep within the system where normal computer users will never touch.  There are instances where the program might be corrupted one way or another.  Therefore, its important to have a way to reinstall them with a fresh version of the software <i>without</i> losing all of the precious data collected.</p>
+				<center><img src='CA_6.png' alt="ControlApp img6"></center>
+				<p>The final feature is the most important of all.  As seen above, it allows the administrator to create either CSVs, Line Graphs, or Picture Graphs of the data collected from the users (to see more about these, check out Graphs and Data Analysis).  Clicking any of the buttons above opens up a file explorer for the administrator to select files from a user.  
+				<p>All in all, I think even the general idea of the ControlApp would be an important addition to any data driven design featuring dropbox.  And it can be as simple as a few looping <a href="http://easygui.sourceforge.net/">easygui</a> popup windows as mine is.</p>
+				<br>
+				<br>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

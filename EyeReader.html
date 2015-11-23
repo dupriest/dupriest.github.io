@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<link rel="shortcut icon" href="Old_Well_BW.ico">
+	<title>EyeReader</title>
+</head>
+
+<body>
+	<div id="root">
+		<div id="Menu">
+			<div id="inner">
+				<div id="MPlink">
+					<a href="mainpage.html"><img src="Old_Well_BW.png" alt="Old Well" id="OldWellPic"></a>
+				</div>
+				<div id="OtherLinks">
+					<table style="width: 100%">
+						<tr>
+							<td><a href="About.html"><br><center>About</center></a></td>
+							<td><a href="DDRD.html"><br><center>Data Driven Research and Dropbox</center></a></td>
+							<td style="background: #bd86e7"><a href="EyeReader.html"><br><center>EyeReader</center></a></td>
+							<td><a href="ControlApp.html"><br><center>ControlApp</center></a></td>
+							<td><a href="GraphsDA.html"><br><center>Graphs and Data Analysis</center></a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="bodydiv">
+			<div id="textdiv">
+				<div id='EyeReader'>
+					<h2>EyeReader: Design and Implementation</h2>
+					<br>
+					<div id="ThreeThreads">
+						<div id = "Fig1">
+						<img src= "EyeReader_BasicIdeaChart.png" alt="EyeReader Flow Chart">
+						<br><b>Figure 1.0 - EyeReader Flow Chart.</b>  General framework for the EyeReader process.  The three threads interact with the main thread of the program to react to the live stream of data, the replies from the Tar Heel Reader server and the page timer.
+						</div>
+						<h3>Three Threads</h3>
+						As seen in Figure 1.0, there are three different processes that work on different threads to interact with the main EyeReader thread.  
+						<p>The first is the Tar Heel Reader website, which interacts through a Simple WebSocket Server to send replies to the program.  These replies are for three important events when the user:</p>
+						<ul>
+							<li>Starts a book</li>
+							<li>Reaches the next page of a book, and</li>
+							<li>Gets to the final page of a book</li>
+						</ul>
+						These replies contain multiple important pieces of information about that given page that are described in detail in the next section. 
+						<br>
+						<p>The second is the Tobii PCEye Go, the device that sits at the bottom of a user's computer and records their eye movements across the screen.  The data points are gathered from it via the EyeX Interface which uses the EyeX API.  It notifies the main thread when it recieves data points, and the main thread adds these points to a local variable called <i>alldata</i> that is a list of data for that current video.
+						<br>
+						<p>The third is the timer, which is just a simple two minute timer that starts every time the user reaches a new page.  The purpose of this is to have a timeout functionality so that the program can't simply be left running and collecting data accidentally.</p>
+					</div>
+					<br>
+					<div id="LogRead">
+						<h3>Logging Data and Video While Reading</h3>
+						<p>The program begins by automatically opening up the user's default browser to the appropriate Tar Heel Reader Favorite's page (a list of prechosen books) specified by a text file called "Bookshelf.txt" which can either be A or B (see ControlApp for how we go about switching this setting). This is automated by utilizing the <a href="https://docs.python.org/2/library/webbrowser.html">webbrowser</a> module.  Simultaneously, we use <a href="https://pywinauto.github.io/">pywinauto</a> to manage automation of window controls to open the Tobii Gaze Viewer (and later, clicking buttons and any input into text fields required to save the video).</p>
+						<p>I'll continue to explain the internal process that occurs once a user begins reading a book.  When the user navigates to the first page of a Tar Heel Reader book the following occurs:</p>
+						<ul>
+							<li>Tar Heel Reader notifies of this 'first page' event through the SimpleWebSocket, initiating a call to handleMessageHelper(self, query) where <i>query</i> contains the following information:</li>
+							<ul>
+								<li><i>choice</i>: True on the last page of a book, False on any other.  The purpose is to recognize when the user has reached the last page to initiate data and video saving given the fact that books can be of varying page length.</li>
+								<li><i>page</i>: Simply recognizes which page the user has navigated to.</li>
+								<li>various other variables(<i>pt, pr, pb, pl, tt, tr, tb, pl</i>) which indicate the coordinates of the picture and text fields on the screen.  This is important later for data analysis.  See the section on <i>Graph Making and Data Analysis</i> for more details.</li>
+							</ul>
+							<li><i>data_saved</i> = False; the program has not called SaveVid and SaveData for this particular book (more on this later).</li>
+							<li><i>eyetracker_on</i> = True; a variable necessary to allow the EyeX API to log SampleGaze and SampleFixations to the <i>alldata</i> list for tracking eye movement on the screen.  These SampleGaze and SampleFixations have the following format:</li>
+							<ul>
+								<li><b>SampleGaze</b> = namedtuple('SampleGaze', ['data_mode', 'timestamp', 'x', 'y'])</li>
+								<li><b>SampleFixation</b> = namedtuple('SampleFixation', ['data_mode', 'event_type', 'timestamp', 'x', 'y'])</li>
+							</ul>
+							<li>appends the following namedtuples to <i>alldata</i></li>
+							<ul>
+								<li><b>PageTurn</b> = namedtuple('PageTurn', ['slug', 'page', 'choice'])</li>
+								<li><b>Picture</b> = namedtuple('Picture', ['pt', 'pb', 'pl', 'pr'])</li>
+								<li><b>Text</b> = namedtuple('Text', ['tt','tb','tl','tr'])</li>
+							</ul>
+							<li>A new Timer gets initialzed that will countdown for two minutes and call timeoutHandlerHelper() after that unless Tar Heel Reader notifies of a New Page event. To read more about the purpose, see <i>Timer and Book Timeout</i>.</li>
+							<li>Pywinauto automates the start of video recording by producing a TypeKey event of F7; the keyboard shortcut to get the Tobii Gaze Viewer to initiate recording video.</li>
+						</ul>
+						<p>Similar situations occur as the user reads the book.  handleMessageHelper(self, query) will be called on every new page event, appending PageTurn, Picture, and Text to <i>alldata</i> in between streaming data from the Tobii PCEye Go. So long as time spent on any given page does not exceed the two minute timer, it will continue as such until the end of the book.</p>
+						<p>On the last page, the query value 'choice' will be True and this will initiate a different course of action.  The following will occur in handleMessageHelper(self, query):</p>
+						<ul>
+							<li>Cancels the current Timer.</li>
+							<li><i>eyetracker_on</i> = False; this stops the EyeX Interface from logging data and appending SampleGaze/SampleFixations to <i>alldata</i></li>
+							<li><i>data_saved</i> = True; this prevents a bug where the rating page (that occurs after the last page of the book) from causing recording to be restarted (these pages are technically still considered part of the book).</li>
+							<li>Stops video recording by using pywinauto to call another TypeKey event F7 which is also the key shortcut for stopping the video recording on the Tobii Dynavox Gaze Viewer.</li>
+							<li>calls SaveVid(datetime, timeout) where datetime is simply the current year-month-day-hour-minute-second that gives the video a unique identifier in its name.  Timeout is a boolean variable; True when SaveVid(datetime, timeout) is called by the TimeoutHandlerHelper() when a page's timer runs out and False when called upon reaching the end of the book.  This function automates the saving of the Tobii Dynavox Gaze Viewer video by pressing the appropriate buttons and selecting the file location to be '/Minimal EyeReader/videos/Bookshelf A(or B)/' and saves the video with this format: 'eyex_' + datetime + (_timeout; if called by timer) + '.mp4'</li>
+							<li>calls SaveData(datetime, timeout) with the same parameters as SaveVid(datetime, timeout).  This function iterates through <i>alldata</i>, converting each namedtuple to a dictionary that can be appended to a new list.  This list of dictionaries is the appropriate data structure to be stored as a json file in '/Minimal EyeReader/data/Bookshelf A(or B)/'.  The filename format for this is the following: 'eyegazedata_' + datetime + '.json'</li>
+							<li>Finally, the user is alerted by a popup that saving is complete and that the next book can be read.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
