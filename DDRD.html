@@ -29,10 +29,78 @@
 		</div>
 		<div id="bodydiv">
 			<div id="textdiv">
-				<h3>The Problem</h3>
-				text
-				<h3>The Solution</h3>
-				other text
+				<h3>Data Driven Research and Dropbox</h3>
+				<p>There's a lot to be said about how computer science can innovate the way we do research.  And this project is just a small way that we have learned this and come to understand the potential of the power of computer processing.</p>
+				<p>Say you are the leader of a study, and the purpose of this study is to gather information on a wide populace of people.  How do you go about gathering this data?  How do you assure the quality of the data you are recieving, and help users that are possibly hundreds of miles away?  How do you make the process simple for the common person to perform these tests or examinations?</p>
+				<p>These are some of the questions that I had going into this project.  In conjecture with Professor Bishop and Karen Erickson, we were able to come up with solutions that could both satisfy analytical requirements and logistical requirements.</p>
+				<p>The solution is something we had already begun to use for a similar purpose... Dropbox.  Dropbox is a file hosting service where you can share folders that can be accessed by multiple users.  Any changes made on one end are synced up with any other user that also has access to this folder.</p>
+				<p>Now, how is this important to our study?</p>
+				<p>Dropbox became our vehicle for an important exchange between user and administrator.</p>
+				<p>It would be a way for the administrator to deliver the software to specific users; all they would have to do is share a folder with the software contained within it.  The structure of the software left up to the design of the programmer (and in a bit I'll show you the implementation I designed).  They also can share updates or reinstalation of the software to users, in the case of an update to the program or somehow if the program files become corrupted.</p>
+				<p>The user, in turn, through using the software, would be able to deliver data files stored in that same shared folder.  This means that as soon as the data is available, the administrator has immediately access to it.  The administrator then has live data feed, and can evalutate it for trends and most important of all quality control.  One doesn't have to wait until the study is done to realize when errors have occured, and hopefully this means that they can be remedied and improve the overall quality of the study.</p>
+				<h3>EyeReader as an Example</h3>
+				<p>So lets use this project as an example of how this can be implemented.  First off, its important to understand what data is being transferred back and forth.  The administrator shares a copy of the EyeReader software with the user, and in turn, when the user runs the software they read books from Tarheel reader which automates saving a) a json file with the captured data points and b) a video taken by the Tobii Dynavox Gaze Viewer (for more information about how this works, see the EyeReader tab).</p> <br> 
+				<p>Now, how is the program itself organized for delivery via Dropbox?
+				<ul>
+					<li>User_Named_Folder</li>
+					<ul>
+						<li>Eye Reader Version.txt - A text file denoting the version number of the program. Important for ControlApp to identify this folder as belonging to an EyeReader user.</li>
+						<li>EyeReader Users Guide - A document containing information on setup and use of the program.</li>
+						<li>setup.bat - a batch file for setting up the program.</li>
+						<li>Minimal EyeReader - contains the program and important files that not need be accessed by users directly.</li>
+						<ul>
+							<li>data - json files are stored here along with any CSV files or Graphs created from them. Json files are distinguished by the Tar Heel Reader bookshelf they came from.</li>
+							<ul>
+								<li>Bookshelf A</li>
+								<li>Bookshelf B</li>
+								<li>CSVs</li>
+								<li>Line Graphs</li>
+								<li>Picture Graphs</li>
+							</ul>
+							<li>program files</li>
+							<ul>
+								<li>dist - core program folder created by cxfreeze-ing the original EyeReader.py file</li>
+								<li>mkshortcut - program folder created by cxfreeze-ing a python file whose job is to create a desktop shortcut for the program.</li>
+								<li>Bookshelf.txt - either reads A or B to tell the program which Tar Heel Reader Bookshelf to navigate to.</li>
+								<li>BookshelfDate.txt - has a date and time when the ControlApp was used to alter Bookshelf.txt</li>
+								<li>Old_Well_icon.ico - icon for the desktop shortcut.</li>
+								<li>Tobii.EyeX.Client.dll - the API necessary to interact with the Tobii PCEye Go.</li>
+							<li>videos - videos from the Tobii Dynavox Gaze Viewer stored here.  Distinguished by the Tar Heel Reader bookshelf they came from.</li>
+							</ul>
+							<ul>
+								<li>Bookshelf A</li>
+								<li>Bookshelf B</li>
+							</ul>
+						</ul>
+					</ul>
+				</ul>
+					<br><br>
+					<p>The important thing here is to keep things simple for everyone using this.  The user themselves only ever need to access that first level to read the User Guide and to run the setup.bat one time.  The setup.bat is a simple batch file and all it does is run the mkshortcut file without having to dig through the program to reach it.  The setup.bat looks like this:<br><br>
+					<div id='setup'>
+					: CD "Minimal EyeReader\program files\mkshortcut"<br>
+					: START MakeShortcut.exe<br>
+					</div>
+					<br>
+					And the mkshortcut is almost just as short, and utilizes a fun little module called <a href='http://winshell.readthedocs.org/en/latest/shortcuts.html'>winshell</a> used to create Windows shortcuts:<br><br>
+					<div id = 'mkshortcut'>
+					: import os<br>
+					: import winshell<br>
+					:<br>
+					: loc = os.getcwd()<br>
+					:<br>
+					: desktop = winshell.desktop()<br>
+					: path = os.path.join(desktop, "EyeReader.lnk") # Shortcut location<br>
+					: target = os.path.join(loc, "Mnimal EyeReader\\program files\\dist\\EyeReader.exe") # Executable location<br>
+					: wDir = os.path.join(loc, "Minimal EyeReader\\program files") # Working Directory<br>
+					: icon = os.path.join(loc, "Minimal Eyereader\\program files\\Old_Well_icon.ico") # Icon location<br>
+					: <br>
+					: winshell.CreateShortcut(path, target, StartIn=wDir, Icon=(icon,0))<br>
+					</div>
+					<br>
+					<p>All these steps are very important little helper programs to making the overall success.  In the mkshortcut, you can specify the path: where the shortcut will be located, target: where the program's exe file is, wDir: the working directory of the program (This is very important for this particular program because the working directory is <i>not</i> the same as the location of the executable; which is the default when you usually create a shortcut on Windows), and finally icon: the location of the icon that will appear on your shortcut (not necessary to create the shortcut, but certainly looks professional).</p>
+					<br><br>
+					Now this is all good for the user, but what about administrator of the study?  How do they manage having multiple users of this program, adding users, creating graphs, etc?  This is discussed further in the ControlApp tab, so head on over there to learn more about how what started as a very simple program became the use all application to making data driven research over dropbox successful.
+					<br><br>
 			</div>
 		</div>
 	</div>

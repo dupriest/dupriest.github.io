@@ -141,3 +141,12 @@ li {
 	margin-left: 700px;
 	width: 600px;
 }
+
+#setup, #mkshortcut {
+	font-family: 'Lucida Console';
+	color: white;
+	background-color: #363636;
+	margin-top: 2px;
+	margin-bottom: 4px;
+	margin-left: 4px;
+}
