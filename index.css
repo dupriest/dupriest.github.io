@@ -37,6 +37,7 @@ a {
 
 td > a {
 	text-decoration: none;
+	font-size: 130%;
 }
 
 a:hover {
@@ -68,10 +69,6 @@ table {
 	border-style: solid;
 	border-color: #363636; /*Was black*/
 	border-width: 7px;
-}
-
-a {
-	font-size: 130%;
 }
 
 #textdiv {

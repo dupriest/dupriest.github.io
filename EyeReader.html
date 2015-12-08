@@ -47,14 +47,14 @@
 						</ul>
 						These replies contain multiple important pieces of information about that given page that are described in detail in the next section. 
 						<br>
-						<p>The second is the Tobii PCEye Go, the device that sits at the bottom of a user's computer and records their eye movements across the screen.  The data points are gathered from it via the EyeX Interface which uses the EyeX API.  It notifies the main thread when it recieves data points, and the main thread adds these points to a local variable called <i>alldata</i> that is a list of data for that current video.
+						<p>The second is the <a href='http://www.tobiiati-webshop.com/products/tobii-pceye-go'>Tobii PCEye Go</a>, the device that sits at the bottom of a user's computer and records their eye movements across the screen.  The data points are gathered from it via the EyeX Interface which uses the EyeX API.  It notifies the main thread when it recieves data points, and the main thread adds these points to a local variable called <i>alldata</i> that is a list of data for that current video.
 						<br>
 						<p>The third is the timer, which is just a simple two minute timer that starts every time the user reaches a new page.  The purpose of this is to have a timeout functionality so that the program can't simply be left running and collecting data accidentally.</p>
 					</div>
 					<br>
 					<div id="LogRead">
 						<h3>Logging Data and Video While Reading</h3>
-						<p>The program begins by automatically opening up the user's default browser to the appropriate Tar Heel Reader Favorite's page (a list of prechosen books) specified by a text file called "Bookshelf.txt" which can either be A or B (see ControlApp for how we go about switching this setting). This is automated by utilizing the <a href="https://docs.python.org/2/library/webbrowser.html">webbrowser</a> module.  Simultaneously, we use <a href="https://pywinauto.github.io/">pywinauto</a> to manage automation of window controls to open the Tobii Gaze Viewer (and later, clicking buttons and any input into text fields required to save the video).</p>
+						<p>The program begins by automatically opening up the user's default browser to the appropriate Tar Heel Reader Favorite's page (a list of prechosen books) specified by a text file called "Bookshelf.txt" which can either be A or B (see ControlApp for how we go about switching this setting). This is automated by utilizing the <a href="https://docs.python.org/2/library/webbrowser.html">webbrowser</a> module.  Simultaneously, we use <a href="https://pywinauto.github.io/">pywinauto</a> to manage automation of window controls to open the <a href='http://www.tobiidynavox.com/gazeviewer/'>Tobii Gaze Viewer</a> (and later, clicking buttons and any input into text fields required to save the video).</p>
 						<p>I'll continue to explain the internal process that occurs once a user begins reading a book.  When the user navigates to the first page of a Tar Heel Reader book the following occurs:</p>
 						<ul>
 							<li>Tar Heel Reader notifies of this 'first page' event through the SimpleWebSocket, initiating a call to handleMessageHelper(self, query) where <i>query</i> contains the following information:</li>
