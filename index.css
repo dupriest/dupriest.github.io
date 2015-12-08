@@ -32,6 +32,10 @@ body {
 
 a {
 	color: black;
+	/*text-decoration: none;*/
+}
+
+td > a {
 	text-decoration: none;
 }
 
