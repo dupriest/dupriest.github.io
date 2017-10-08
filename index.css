@@ -1,11 +1,19 @@
 
 /* html and body stuff makes it takes up 100% height*/
+
 html, body {
 	height: 100%;
 }
 
+#textdiv {
+	width: 95%;
+	margin: 0 auto;
+	background: white;
+}
+
 body {
-	margin: 0;
+	margin: 0px;
+	background: lightgray;
 }
 
 .page-wrap {
@@ -25,7 +33,6 @@ body {
 }
 
 .main-content {
-	background: gray;
 	top: 7vh;
 }
 
@@ -56,6 +63,15 @@ button {
 	height: 100%;
     position: relative;
     display: inline-block;
+    max-width: 30%;
+}
+
+.link {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	max-width: 80%;
+	padding-right: 10px;
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -79,14 +95,44 @@ button {
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #f1f1f1}
 
-/* Show the dropdown menu on hover */
+/* Show the dropdown menu on hover 
 .dropdown:hover .dropdown-content {
     display: block;
 }
+*/
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
+}
+
+#setup, #mkshortcut {
+	font-family: 'Lucida Console';
+	color: white;
+	background-color: #363636;
+	margin-top: 2px;
+	margin-bottom: 4px;
+	margin-left: 4px;
+}
+
+.CAimg {
+	max-width: 98%;
+	margin: 0 auto;
+}
+
+#pgc, #lgc {
+	float: left;
+	width: 50%;
+	display: inline-block;
+}
+
+#pga, #lga {
+	width: 50%;
+	display: inline-block;
+}
+
+@media screen and (max-width: 600px) {
+  #pgc, #lgc, #pga, #lga {width: 100%;}
 }
 
 /*
