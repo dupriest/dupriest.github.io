@@ -1,11 +1,112 @@
+
+/* html and body stuff makes it takes up 100% height*/
+html, body {
+	height: 100%;
+}
+
 body {
-	background: #363636; /*Was black*/
+	margin: 0;
+}
+
+.page-wrap {
+	height: 100%;
+}
+
+.main-content {
+	position: absolute;
+	width: 100%;
+	height: 93vh;
+}
+
+.main-nav {
+	position: absolute;
+	width: 100%;
+	height: 7vh;
+}
+
+.main-content {
+	background: gray;
+	top: 7vh;
+}
+
+.main-nav {
+	background: white;
+}
+
+#OldWellPic {
+	height: 100%;
+}
+
+button {
+	height: 100%;
+	width: 100px;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+	height: 100%;
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+/*
+.main-sidebar {
+	background: purple;
+	-webkit-box-ordinal-group: 3;
+	-moz-box-ordinal-group: 3;
+	-ms-flex-order: 3;
+	-webkit-order: 3;
+	order: 3;
+}*/
+/*
+body {
+	background: #363636; 
 	font-family: "Comic Sans MS";
 }
 
 #OldWellPic {
 	border-style: solid;
-	border-color: #363636; /*Was black*/
+	border-color: #363636; 
 }
 
 #Menu {
@@ -19,7 +120,7 @@ body {
 }
 #OtherLinks {
 	border-style: solid;
-	border-color: #363636; /*Was black*/
+	border-color: #363636;
 	margin-left: 110px;
 	height: 100px;
 
@@ -32,7 +133,6 @@ body {
 
 a {
 	color: black;
-	/*text-decoration: none;*/
 }
 
 td > a {
@@ -46,7 +146,7 @@ a:hover {
 
 td {
 	border-style: solid;
-	border-color: #363636 white #363636 white; /*Was black*/
+	border-color: #363636 white #363636 white; 
 	border-width: 5px;
 	height: 100%;
 	background-color: white;
@@ -67,7 +167,7 @@ table {
 #textdiv {
 	background-color:white;
 	border-style: solid;
-	border-color: #363636; /*Was black*/
+	border-color: #363636;
 	border-width: 7px;
 }
 
@@ -90,7 +190,7 @@ table {
 	background-color:white;
 	font-size: 150%;
 	border-style: solid;
-	border-color: #363636; /*Was black*/
+	border-color: #363636; 
 	border-width: 7px;
 }
 
@@ -151,3 +251,4 @@ li {
 	margin-bottom: 4px;
 	margin-left: 4px;
 }
+*/
